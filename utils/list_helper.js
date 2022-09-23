@@ -2,15 +2,24 @@ const dummy = (blogs) => {
   return Number(1)
 }
 
-const totalLikes = (blogposts) => {
+const totalLikes = (blogs) => {
   let sum = 0
-  blogposts.forEach(element => {
+  blogs.forEach(element => {
     sum += element['likes']
   })
   return Number(sum)
 }
 
+const findMaxLikes = (blogs) => {
+  let blogWithMostLikes = blogs[0]
+  blogs.forEach(element => {
+    blogWithMostLikes = element['likes'] > blogWithMostLikes['likes'] ? element : blogWithMostLikes
+  })
+  return blogWithMostLikes
+}
+
 module.exports = {
   dummy,
-  totalLikes
+  totalLikes,
+  findMaxLikes
 }
