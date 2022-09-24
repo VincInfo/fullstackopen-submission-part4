@@ -74,12 +74,22 @@ describe('total likes', () => {
 describe('favorite blog', () => {
   test('when list has only one blog, equals that', () => {
     const result = listHelper.favoriteBlog([blogs[0]])
-    expect(result).toBe(blogs[0])
+    const expected = {
+      title: blogs[0]['title'],
+      author: blogs[0]['author'],
+      likes: blogs[0]['likes']
+    }
+    expect(JSON.stringify(result)).toBe(JSON.stringify(expected))
   })
 
   test('when list hat multiple blogs, euqals the one with most likes', () => {
     const result = listHelper.favoriteBlog(blogs)
-    expect(result).toBe(blogs[2])
+    const expected = {
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      likes: 12
+    }
+    expect(JSON.stringify(result)).toBe(JSON.stringify(expected))
   })
 })
 

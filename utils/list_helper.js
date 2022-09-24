@@ -1,3 +1,5 @@
+const blog = require("../models/blog")
+
 const dummy = (blogs) => {
   return Number(1)
 }
@@ -15,7 +17,12 @@ const favoriteBlog = (blogs) => {
   blogs.forEach(element => {
     blogWithMostLikes = element['likes'] > blogWithMostLikes['likes'] ? element : blogWithMostLikes
   })
-  return blogWithMostLikes
+  const result = {
+    title: blogWithMostLikes['title'],
+    author: blogWithMostLikes['author'],
+    likes: blogWithMostLikes['likes']
+  }
+  return result
 }
 
 const mostBlogs = (blogs) => {
