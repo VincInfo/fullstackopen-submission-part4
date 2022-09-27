@@ -28,9 +28,9 @@ const favoriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
   const hash = new Map()
   blogs.forEach(blog => {
-    if(hash.has(blog['author'])){
+    if (hash.has(blog['author'])) {
       hash.set(blog['author'], hash.get(blog['author']) + 1)
-    }else{
+    } else {
       hash.set(blog['author'], 1)
     }
   })
@@ -49,9 +49,9 @@ const mostBlogs = (blogs) => {
 const mostLikes = (blogs) => {
   const hash = new Map()
   blogs.forEach(blog => {
-    if(hash.has(blog['author'])){
+    if (hash.has(blog['author'])) {
       hash.set(blog['author'], hash.get(blog['author']) + blog['likes'])
-    }else{
+    } else {
       hash.set(blog['author'], blog['likes'])
     }
   })
@@ -66,8 +66,6 @@ const mostLikes = (blogs) => {
   }
   return res
 }
-
-
 
 module.exports = {
   dummy,
