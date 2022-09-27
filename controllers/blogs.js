@@ -8,9 +8,8 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.get('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
-  if(blog){
+  if (blog) {
     response.json(blog)
-    // JSON.parse(JSON.stringify(blog))
   } else {
     response.status(404).end()
   }
@@ -20,13 +19,11 @@ blogsRouter.post('/', async (request, response) => {
 
   const { title, author, url, likes } = request.body
 
-  if (!title) {
+  if (!title || !url) {
     return response.status(400).json({
       error: 'invalid title'
     })
   }
-
-  // console.log('The title is: ' + title)
 
   const blog = await new Blog({
     title: title,
@@ -52,8 +49,6 @@ blogsRouter.put('/:id', async (request, response) => {
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, newBlog)
   response.json(updatedBlog)
 })
-
-
 
 blogsRouter.delete('/:id', async (request, response) => {
   await Blog.findByIdAndRemove(request.params.id)

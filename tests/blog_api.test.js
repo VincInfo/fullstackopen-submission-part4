@@ -47,7 +47,7 @@ describe('adding a new blog', () => {
       id: '5a422aa71b54b676234d17f8',
       title: 'TestTitle',
       author: 'TestAuthor',
-      url: 'TestURL',
+      url: 'http://testurl.com',
       likes: 7
     }
 
@@ -68,8 +68,26 @@ describe('adding a new blog', () => {
     const newBlog = {
       id: '5a422aa71b54b676234c17f8',
       author: 'TestAuthor2',
-      url: 'TestURL2',
+      url: 'http://testurl2.com',
       likes: 7
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const blogsAfterPost = await helper.blogsInDB()
+
+    expect(blogsAfterPost).toHaveLength(helper.initialBlogs.length)
+  })
+
+  test('a blog without url is not added', async () => {
+    const newBlog = {
+      id: '5a422aa71b54b676234c17f8',
+      title: 'TestTitle3',
+      author: 'TestAuthor3',
+      likes: 2
     }
 
     await api
@@ -85,9 +103,9 @@ describe('adding a new blog', () => {
   test('if likes property is missing, will default to 0', async () => {
     const newBlog = {
       id: '5a422aa91b54b676234c17f8',
-      title: 'TestTitle3',
-      author: 'TestAuthor3',
-      url: 'TestURL3',
+      title: 'TestTitle4',
+      author: 'TestAuthor4',
+      url: 'http://testurl4.com',
     }
 
     await api
