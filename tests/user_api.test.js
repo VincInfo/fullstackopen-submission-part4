@@ -6,17 +6,15 @@ const helper = require('./test_helper')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
-describe('when there is initially one user in db', () => {
+describe('when there is initially one user in the database', () => {
   beforeEach(async () => {
     await User.deleteMany({})
-
     const passwordHash = await bcrypt.hash('secret', 10)
     const user = new User({ username: 'root', passwordHash })
-
     await user.save()
   })
 
-  test('creation succeeds with a fresh username', async () => {
+  test('creation works with a new username', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
@@ -38,12 +36,12 @@ describe('when there is initially one user in db', () => {
     expect(usernames).toContain(newUser.username)
   })
 
-  test('creation fails with proper statuscode and message if username already taken', async () => {
+  test('creation fails with proper statuscode and message if username is already taken', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
       username: 'root',
-      name: 'Superuser',
+      name: 'Whooaaa',
       password: 'Schweineschwarte'
     }
 
@@ -57,5 +55,51 @@ describe('when there is initially one user in db', () => {
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toEqual(usersAtStart)
+  })
+
+  test('createn fails with proper statuscode and messag if username is too short', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'hi',
+      name: 'Ironman',
+      password : 'topsecret'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('is shorter than the minimum allowed length (3)')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('creation fails with proper statuscode and message if password too short', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'Spiderman',
+      name: 'Batman',
+      password: 'hi',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('password must be at least 3 characters long')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  afterAll(() => {
+    mongoose.connection.close()
   })
 })
